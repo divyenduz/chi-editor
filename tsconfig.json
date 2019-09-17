@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "lib": ["dom", "esnext"],
+    "rootDir": "src",
+    "outDir": "dist",
+    "strict": false, // TODO: Fix this
+    "esModuleInterop": true
+  }
+}

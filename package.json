@@ -1,0 +1,17 @@
+{
+  "name": "chi-editor",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "bin": {
+    "chi": "dist/index.js"
+  },
+  "license": "MIT",
+  "x": "ts-node src/index.ts",
+  "devDependencies": {
+    "@types/node": "^12.7.5"
+  },
+  "scripts": {
+    "x": "ts-node src/index.ts sample.file",
+    "xd": "yarn x 2>> debug.log sample.file"
+  }
+}
