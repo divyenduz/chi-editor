@@ -16,16 +16,7 @@ class Editor {
   cursor: Cursor
   history: HistoryItem[]
 
-  constructor() {
-    const fileName = process.argv[2]
-    console.log({ fileName })
-    if (!fileName) {
-      const colorStart = '\x1b[31;49m'
-      const colorEnd = '\x1b[39;49m'
-      stdout.write(`${colorStart}Please provide a file name${colorEnd}`)
-      return
-    }
-
+  constructor(fileName: string) {
     const lines = fs
       .readFileSync(path.join(process.cwd(), fileName), {
         encoding: 'utf8'
@@ -87,7 +78,7 @@ class Editor {
         break
       case '\u001b[4~': // End key
         this.cursor = this.cursor.moveToCol(
-          this.buffer.lines[this.cursor.row].length
+          this.buffer.lineLength(this.cursor.row)
         )
         break
       case '\u0015': // C-u
@@ -105,9 +96,17 @@ class Editor {
               this.cursor.col - 1
             )
           } else {
+            if (this.cursor.row === 0 && this.cursor.col === 0) {
+              // Do not move cursor or perform backspace if it is at 0,0
+              break
+            }
             this.cursor = this.cursor
               .up(this.buffer)
-              .moveToCol(this.buffer.lines[this.cursor.row - 1].length)
+              .moveToCol(
+                this.buffer.lineLength(
+                  Utils.clamp(this.cursor.row - 1, 0, this.buffer.lineCount())
+                )
+              )
           }
           this.cursor = this.cursor.left(this.buffer)
           break
@@ -246,5 +245,13 @@ class Utils {
   }
 }
 
-const editor = new Editor()
+const fileName = process.argv[2]
+if (!fileName) {
+  const colorStart = '\x1b[31;49m'
+  const colorEnd = '\x1b[39;49m'
+  stdout.write(`${colorStart}Please provide a file name${colorEnd}`)
+  process.exit(1)
+}
+
+const editor = new Editor(fileName)
 editor.run()
