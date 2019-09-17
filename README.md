@@ -14,6 +14,7 @@ chi <file-name>
 | Hotkey         | Description                    |
 | -------------- | ------------------------------ |
 | `C-q` or `C-c` | Quit the editor                |
+| `C-s`          | Save the buffer to file        |
 | Return         | Split lines                    |
 | Backspace      | Delete characters, merge lines |
 | `C-p` or up    | Move cursor to previous row    |

@@ -97,7 +97,6 @@ class Editor {
         this.saveFile(content)
         break
       default:
-        console.error({ char })
         if (char.charCodeAt(0) === 127) {
           if (this.cursor.col > 0) {
             // TODO: Backspace it returns '' but with length 1 otherwise, which is a mystery
@@ -284,6 +283,12 @@ if (!filename) {
   const colorEnd = '\x1b[39;49m'
   stdout.write(`${colorStart}Please provide a file name${colorEnd}`)
   process.exit(1)
+}
+
+const filepath = path.join(process.cwd(), filename)
+const exists = fs.existsSync(filepath)
+if (!exists) {
+  fs.writeFileSync(filepath, '')
 }
 
 const editor = new Editor(filename)
