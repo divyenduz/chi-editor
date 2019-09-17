@@ -12,16 +12,22 @@ interface HistoryItem {
 }
 
 class Editor {
+  filename: string
+  filepath: string
   buffer: Buffer
   cursor: Cursor
   history: HistoryItem[]
 
-  constructor(fileName: string) {
+  constructor(filename: string) {
+    this.filename = filename
+    this.filepath = path.join(process.cwd(), this.filename)
+
     const lines = fs
-      .readFileSync(path.join(process.cwd(), fileName), {
+      .readFileSync(this.filepath, {
         encoding: 'utf8'
       })
       .split(os.EOL)
+
     this.buffer = new Buffer(lines)
     this.cursor = new Cursor()
     this.history = []
@@ -86,7 +92,12 @@ class Editor {
         break
       case '\u001b': // Esc
         break
+      case '\u0013': // C-s
+        const content = this.buffer.getAsString()
+        this.saveFile(content)
+        break
       default:
+        console.error({ char })
         if (char.charCodeAt(0) === 127) {
           if (this.cursor.col > 0) {
             // TODO: Backspace it returns '' but with length 1 otherwise, which is a mystery
@@ -139,6 +150,10 @@ class Editor {
       this.cursor = cursor
     }
   }
+
+  saveFile(content) {
+    fs.writeFileSync(this.filepath, content)
+  }
 }
 
 class Buffer {
@@ -148,7 +163,7 @@ class Buffer {
   }
 
   render() {
-    stdout.write(this.lines.join(os.EOL))
+    stdout.write(this.getAsString())
   }
 
   insert(char: string, row: number, col: number): Buffer {
@@ -187,6 +202,10 @@ class Buffer {
 
   lineLength(row: number) {
     return this.lines[row].length
+  }
+
+  getAsString() {
+    return this.lines.join(os.EOL)
   }
 }
 
@@ -259,13 +278,13 @@ class Utils {
   }
 }
 
-const fileName = process.argv[2]
-if (!fileName) {
+const filename = process.argv[2]
+if (!filename) {
   const colorStart = '\x1b[31;49m'
   const colorEnd = '\x1b[39;49m'
   stdout.write(`${colorStart}Please provide a file name${colorEnd}`)
   process.exit(1)
 }
 
-const editor = new Editor(fileName)
+const editor = new Editor(filename)
 editor.run()

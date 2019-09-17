@@ -11,8 +11,8 @@
     "@types/node": "^12.7.5"
   },
   "scripts": {
-    "x": "ts-node src/index.ts sample.file",
-    "xd": "yarn x 2>> debug.log sample.file",
+    "x": "ts-node src/index.ts dev.file",
+    "xd": "yarn x 2>> debug.log dev.file",
     "build": "rm -rf dist && tsc && chmod +x dist/index.js",
     "watch": "tsc -w"
   }
