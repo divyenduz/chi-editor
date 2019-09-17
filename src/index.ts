@@ -95,11 +95,18 @@ class Editor {
               this.cursor.row,
               this.cursor.col - 1
             )
+          } else if (this.cursor.row === 0 && this.cursor.col === 0) {
+            break
+          } else if (this.cursor.row > 0 && this.cursor.col === 0) {
+            this.saveSnapshot()
+            const prevLineLength = this.buffer.lineLength(this.cursor.row - 1)
+            this.buffer = this.buffer.mergeLines(
+              this.cursor.row,
+              this.cursor.col
+            )
+            this.cursor = this.cursor.up(this.buffer).moveToCol(prevLineLength)
+            break
           } else {
-            if (this.cursor.row === 0 && this.cursor.col === 0) {
-              // Do not move cursor or perform backspace if it is at 0,0
-              break
-            }
             this.cursor = this.cursor
               .up(this.buffer)
               .moveToCol(
@@ -127,7 +134,7 @@ class Editor {
 
   restoreSnapshot() {
     if (this.history.length > 0) {
-      const { buffer, cursor } = this.history.pop()
+      const { buffer, cursor } = this.history.pop() // TODO: Make immutable
       this.buffer = buffer
       this.cursor = cursor
     }
@@ -165,6 +172,13 @@ class Buffer {
       ...lines.slice(row + 1)
     ]
     return new Buffer(finalLines)
+  }
+
+  mergeLines(row: number, col: number): Buffer {
+    let lines = this.lines.map(line => line)
+    lines[row - 1] = lines[row - 1] + lines[row]
+    delete lines[row] // TODO: Make immutable
+    return new Buffer(lines.filter(line => Boolean(line)))
   }
 
   lineCount() {
