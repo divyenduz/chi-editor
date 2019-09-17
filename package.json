@@ -12,6 +12,8 @@
   },
   "scripts": {
     "x": "ts-node src/index.ts sample.file",
-    "xd": "yarn x 2>> debug.log sample.file"
+    "xd": "yarn x 2>> debug.log sample.file",
+    "build": "rm -rf dist && tsc && chmod +x dist/index.js",
+    "watch": "tsc -w"
   }
 }

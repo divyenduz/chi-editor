@@ -27,15 +27,15 @@ class Editor {
     }
 
     const lines = fs
-      .readFileSync(path.join(__dirname, fileName), {
+      .readFileSync(path.join(process.cwd(), fileName), {
         encoding: 'utf8'
       })
       .split(os.EOL)
-    console.error(__dirname)
     this.buffer = new Buffer(lines)
     this.cursor = new Cursor()
     this.history = []
   }
+
   run() {
     stdin.setRawMode(true)
     stdin.resume()
@@ -96,7 +96,6 @@ class Editor {
       case '\u001b': // Esc
         break
       default:
-        console.error({ char })
         if (char.charCodeAt(0) === 127) {
           if (this.cursor.col > 0) {
             // TODO: Backspace it returns '' but with length 1 otherwise, which is a mystery
