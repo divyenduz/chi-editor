@@ -2,6 +2,13 @@
 
 CLI editor made for fun
 
+Install:
+
+```sh
+npm install -g chi-editor
+chi <file-name>
+```
+
 # Features
 
 | Hotkey         | Description                    |
