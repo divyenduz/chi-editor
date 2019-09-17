@@ -3,7 +3,8 @@
     "lib": ["dom", "esnext"],
     "rootDir": "src",
     "outDir": "dist",
-    "strict": false, // TODO: Fix this
-    "esModuleInterop": true
+    "strict": true,
+    "esModuleInterop": true,
+    "noUnusedLocals": true
   }
 }
