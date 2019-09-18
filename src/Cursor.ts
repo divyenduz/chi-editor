@@ -1,5 +1,5 @@
-import { Utils } from './Utils'
 import { Buffer } from './Buffer'
+import { Utils } from './Utils'
 
 export class Cursor {
   row: number

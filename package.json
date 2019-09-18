@@ -8,11 +8,14 @@
   "license": "MIT",
   "x": "ts-node src/index.ts",
   "devDependencies": {
-    "@types/node": "^12.7.5"
+    "@types/node": "^12.7.5",
+    "tslint": "^5.20.0",
+    "typescript": "^3.6.3"
   },
   "scripts": {
     "x": "ts-node src/index.ts dev.file",
     "xd": "yarn x 2>> debug.log dev.file",
+    "lint": "tslint src/**/*",
     "build": "rm -rf dist && tsc && chmod +x dist/index.js",
     "watch": "tsc -w"
   }

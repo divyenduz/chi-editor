@@ -2,10 +2,10 @@ import fs from 'fs'
 import os from 'os'
 import path from 'path'
 
-import { Cursor } from './Cursor'
 import { ANSI } from './ANSI'
-import { Utils } from './Utils'
 import { Buffer } from './Buffer'
+import { Cursor } from './Cursor'
+import { Utils } from './Utils'
 
 const { stdin } = process
 
@@ -58,7 +58,9 @@ export class Editor {
 
   handleInput(char: string) {
     const handled = this.handleSpecialChar(char)
-    if (handled) return
+    if (handled) {
+      return
+    }
 
     switch (char) {
       case '\u0011': // C-q
@@ -112,13 +114,6 @@ export class Editor {
         break
       default:
         // TODO: Function keys pending amongst other keys
-
-        console.error({
-          char,
-          code: char.charCodeAt(0),
-          cp: char.codePointAt(0),
-          v: char === 'U+0008'
-        })
 
         this.saveSnapshot()
         this.buffer = this.buffer.insert(char, this.cursor.row, this.cursor.col)

@@ -15,19 +15,19 @@ export class Buffer {
   }
 
   insert(char: string, row: number, col: number): Buffer {
-    let lines = this.lines.map(line => line)
+    const lines = this.lines.map(line => line)
     lines[row] = Utils.insertAt(lines[row], col, char)
     return new Buffer(lines)
   }
 
   delete(row: number, col: any): Buffer {
-    let lines = this.lines.map(line => line)
+    const lines = this.lines.map(line => line)
     lines[row] = Utils.deleteAt(lines[row], col)
     return new Buffer(lines)
   }
 
   splitLine(row: number, col: number): Buffer {
-    let lines = this.lines.map(line => line)
+    const lines = this.lines.map(line => line)
     const splitLines = [lines[row].slice(0, col), lines[row].slice(col)]
     const finalLines = [
       ...lines.slice(0, row),
@@ -38,7 +38,7 @@ export class Buffer {
   }
 
   mergeLines(row: number): Buffer {
-    let lines: string[] = this.lines
+    const lines: string[] = this.lines
       .map((line, index) => {
         if (index === row - 1) {
           return this.lines[row - 1] + this.lines[row]
