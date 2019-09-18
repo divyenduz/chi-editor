@@ -37,11 +37,16 @@ export class Buffer {
     return new Buffer(finalLines)
   }
 
-  mergeLines(row: number, col: number): Buffer {
-    let lines = this.lines.map(line => line)
-    lines[row - 1] = lines[row - 1] + lines[row]
-    delete lines[row] // TODO: Make immutable
-    return new Buffer(lines.filter(line => line === '' || Boolean(line)))
+  mergeLines(row: number): Buffer {
+    let lines: string[] = this.lines
+      .map((line, index) => {
+        if (index === row - 1) {
+          return this.lines[row - 1] + this.lines[row]
+        }
+        return line
+      })
+      .filter((_, index) => index !== row)
+    return new Buffer(lines)
   }
 
   lineCount() {

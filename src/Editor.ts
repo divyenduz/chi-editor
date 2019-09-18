@@ -58,7 +58,7 @@ export class Editor {
 
   handleInput(char: string) {
     switch (char) {
-      case '\u0011': // C-q // TODO: Check what encoding to use to get this to work like "C-q" from $stdin.getc in ruby
+      case '\u0011': // C-q
       case '\u0003': // C-c
         ANSI.clearScreen()
         process.exit(0)
@@ -109,9 +109,11 @@ export class Editor {
         break
       default:
         // TODO: Function keys pending amongst other keys
+
+        // Backspace it returns and invisible ' ' but with length 1 but not space
+        // Its character code is 127 though
         if (char.charCodeAt(0) === 127) {
           if (this.cursor.col > 0) {
-            // TODO: Backspace it returns '' but with length 1 otherwise, which is a mystery
             this.saveSnapshot()
             this.buffer = this.buffer.delete(
               this.cursor.row,
@@ -122,10 +124,7 @@ export class Editor {
           } else if (this.cursor.row > 0 && this.cursor.col === 0) {
             this.saveSnapshot()
             const prevLineLength = this.buffer.lineLength(this.cursor.row - 1)
-            this.buffer = this.buffer.mergeLines(
-              this.cursor.row,
-              this.cursor.col
-            )
+            this.buffer = this.buffer.mergeLines(this.cursor.row)
             this.cursor = this.cursor.up(this.buffer).moveToCol(prevLineLength)
             break
           } else {
