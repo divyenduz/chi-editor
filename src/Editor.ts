@@ -1,10 +1,7 @@
-import fs from 'fs'
-import os from 'os'
-import path from 'path'
-
 import { ANSI } from './ANSI'
 import { Buffer } from './Buffer'
 import { Cursor } from './Cursor'
+import { FileManager } from './FileManager'
 import { Utils } from './Utils'
 
 const { stdin } = process
@@ -16,20 +13,15 @@ interface HistoryItem {
 
 export class Editor {
   private filename: string
-  private filepath: string
   private buffer: Buffer
   private cursor: Cursor
   private history: HistoryItem[]
 
   constructor(filename: string) {
-    this.filename = filename
-    this.filepath = path.join(process.cwd(), this.filename)
+    const file = FileManager.readOrCreate(filename)
 
-    const lines = fs
-      .readFileSync(this.filepath, {
-        encoding: 'utf8',
-      })
-      .split(os.EOL)
+    this.filename = file.filename
+    const lines = file.contents
 
     this.buffer = new Buffer(lines)
     this.cursor = new Cursor()
@@ -188,6 +180,6 @@ export class Editor {
   }
 
   private saveFile(content: string) {
-    fs.writeFileSync(this.filepath, content)
+    FileManager.save(this.filename, content)
   }
 }
