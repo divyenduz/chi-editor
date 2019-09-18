@@ -109,7 +109,6 @@ export class Editor {
         break
       default:
         // TODO: Function keys pending amongst other keys
-        console.error({ char, code: char.charCodeAt(0) })
         if (char.charCodeAt(0) === 127) {
           if (this.cursor.col > 0) {
             // TODO: Backspace it returns '' but with length 1 otherwise, which is a mystery
@@ -157,7 +156,8 @@ export class Editor {
 
   restoreSnapshot() {
     if (this.history.length > 0) {
-      const historyItem = this.history.pop() // TODO: Make immutable
+      const historyItem = this.history.slice().pop()
+      this.history = this.history.slice(0, this.history.length - 1)
       if (historyItem) {
         const { buffer, cursor } = historyItem
         this.buffer = buffer
