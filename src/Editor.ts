@@ -57,6 +57,9 @@ export class Editor {
   }
 
   handleInput(char: string) {
+    const handled = this.handleSpecialChar(char)
+    if (handled) return
+
     switch (char) {
       case '\u0011': // C-q
       case '\u0003': // C-c
@@ -110,39 +113,57 @@ export class Editor {
       default:
         // TODO: Function keys pending amongst other keys
 
-        // Backspace it returns and invisible ' ' but with length 1 but not space
-        // Its character code is 127 though
-        if (char.charCodeAt(0) === 127) {
-          if (this.cursor.col > 0) {
-            this.saveSnapshot()
-            this.buffer = this.buffer.delete(
-              this.cursor.row,
-              this.cursor.col - 1
-            )
-          } else if (this.cursor.row === 0 && this.cursor.col === 0) {
-            break
-          } else if (this.cursor.row > 0 && this.cursor.col === 0) {
-            this.saveSnapshot()
-            const prevLineLength = this.buffer.lineLength(this.cursor.row - 1)
-            this.buffer = this.buffer.mergeLines(this.cursor.row)
-            this.cursor = this.cursor.up(this.buffer).moveToCol(prevLineLength)
-            break
-          } else {
-            this.cursor = this.cursor
-              .up(this.buffer)
-              .moveToCol(
-                this.buffer.lineLength(
-                  Utils.clamp(this.cursor.row - 1, 0, this.buffer.lineCount())
-                )
-              )
-          }
-          this.cursor = this.cursor.left(this.buffer)
-          break
-        }
+        console.error({
+          char,
+          code: char.charCodeAt(0),
+          cp: char.codePointAt(0),
+          v: char === 'U+0008'
+        })
+
         this.saveSnapshot()
         this.buffer = this.buffer.insert(char, this.cursor.row, this.cursor.col)
         this.cursor = this.cursor.right(this.buffer)
         break
+    }
+  }
+
+  handleSpecialChar(char: string) {
+    const code = char.charCodeAt(0)
+    if (code === 127) {
+      return this.handleBackspace(char)
+    }
+    return false
+  }
+
+  handleBackspace(char: string) {
+    // Backspace it returns and invisible ' ' but with length 1 but not space
+    // Its character code is 127 though
+    if (char.charCodeAt(0) === 127) {
+      if (this.cursor.col > 0) {
+        this.saveSnapshot()
+        this.buffer = this.buffer.delete(this.cursor.row, this.cursor.col - 1)
+        this.cursor = this.cursor.left(this.buffer)
+        return true
+      } else if (this.cursor.row === 0 && this.cursor.col === 0) {
+        return true
+      } else if (this.cursor.row > 0 && this.cursor.col === 0) {
+        this.saveSnapshot()
+        const prevLineLength = this.buffer.lineLength(this.cursor.row - 1)
+        this.buffer = this.buffer.mergeLines(this.cursor.row)
+        this.cursor = this.cursor.up(this.buffer).moveToCol(prevLineLength)
+        return true
+      } else {
+        this.cursor = this.cursor
+          .up(this.buffer)
+          .moveToCol(
+            this.buffer.lineLength(
+              Utils.clamp(this.cursor.row - 1, 0, this.buffer.lineCount())
+            )
+          )
+        return true
+      }
+    } else {
+      return false
     }
   }
 
