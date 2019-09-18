@@ -5,10 +5,8 @@
   "rules": {
     "semicolon": false,
     "quotemark": false,
-    "trailing-comma": false, // TODO: Make it true later
-    "member-access": false, // TODO: Make it true later
-    "arrow-parens": false, // TODO: Make it true later
-    "interface-name": false
+    "interface-name": false,
+    "arrow-parens": false
   },
   "rulesDirectory": []
 }

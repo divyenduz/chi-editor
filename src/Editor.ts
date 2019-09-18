@@ -15,11 +15,11 @@ interface HistoryItem {
 }
 
 export class Editor {
-  filename: string
-  filepath: string
-  buffer: Buffer
-  cursor: Cursor
-  history: HistoryItem[]
+  private filename: string
+  private filepath: string
+  private buffer: Buffer
+  private cursor: Cursor
+  private history: HistoryItem[]
 
   constructor(filename: string) {
     this.filename = filename
@@ -27,7 +27,7 @@ export class Editor {
 
     const lines = fs
       .readFileSync(this.filepath, {
-        encoding: 'utf8'
+        encoding: 'utf8',
       })
       .split(os.EOL)
 
@@ -36,7 +36,7 @@ export class Editor {
     this.history = []
   }
 
-  run() {
+  public run() {
     if (stdin.isTTY) {
       stdin.setRawMode!(true)
     }
@@ -49,14 +49,14 @@ export class Editor {
     })
   }
 
-  render() {
+  private render() {
     ANSI.clearScreen()
     ANSI.moveCursor(0, 0)
     this.buffer.render()
     ANSI.moveCursor(this.cursor.row, this.cursor.col)
   }
 
-  handleInput(char: string) {
+  private handleInput(char: string) {
     const handled = this.handleSpecialChar(char)
     if (handled) {
       return
@@ -96,7 +96,7 @@ export class Editor {
       case '\u001b[4~': // End key
       case '\u001b[F':
         this.cursor = this.cursor.moveToCol(
-          this.buffer.lineLength(this.cursor.row)
+          this.buffer.lineLength(this.cursor.row),
         )
         break
       case '\u0015': // C-u
@@ -114,7 +114,7 @@ export class Editor {
         if (this.cursor.col < this.buffer.lineLength(this.cursor.row)) {
           this.buffer = this.buffer.deleteForward(
             this.cursor.row,
-            this.cursor.col
+            this.cursor.col,
           )
         }
         break
@@ -128,7 +128,7 @@ export class Editor {
     }
   }
 
-  handleSpecialChar(char: string) {
+  private handleSpecialChar(char: string) {
     const code = char.charCodeAt(0)
     if (code === 127) {
       return this.handleBackspace(char)
@@ -136,7 +136,7 @@ export class Editor {
     return false
   }
 
-  handleBackspace(char: string) {
+  private handleBackspace(char: string) {
     // Backspace it returns and invisible ' ' but with length 1 but not space
     // Its character code is 127 though
     if (char.charCodeAt(0) === 127) {
@@ -158,8 +158,8 @@ export class Editor {
           .up(this.buffer)
           .moveToCol(
             this.buffer.lineLength(
-              Utils.clamp(this.cursor.row - 1, 0, this.buffer.lineCount())
-            )
+              Utils.clamp(this.cursor.row - 1, 0, this.buffer.lineCount()),
+            ),
           )
         return true
       }
@@ -168,14 +168,14 @@ export class Editor {
     }
   }
 
-  saveSnapshot() {
+  private saveSnapshot() {
     this.history = this.history.concat({
       buffer: this.buffer,
-      cursor: this.cursor
+      cursor: this.cursor,
     })
   }
 
-  restoreSnapshot() {
+  private restoreSnapshot() {
     if (this.history.length > 0) {
       const historyItem = this.history.slice().pop()
       this.history = this.history.slice(0, this.history.length - 1)
@@ -187,7 +187,7 @@ export class Editor {
     }
   }
 
-  saveFile(content: string) {
+  private saveFile(content: string) {
     fs.writeFileSync(this.filepath, content)
   }
 }
