@@ -11,20 +11,21 @@ chi <file-name>
 
 # Features
 
-| Hotkey         | Description                    |
-| -------------- | ------------------------------ |
-| `C-q` or `C-c` | Quit the editor                |
-| `C-s`          | Save the buffer to file        |
-| Return         | Split lines                    |
-| Backspace      | Delete characters, merge lines |
-| `C-p` or up    | Move cursor to previous row    |
-| `C-n` or down  | Move cursor to next row        |
-| `C-b` or back  | Move cursor to forward         |
-| `C-f` or right | Move cursor to backward        |
-| Esc            | Ignore                         |
-| `C-u`          | Undo                           |
-| Home           | Move cursor to start of line   |
-| End            | Move cursor to end of line     |
+| Hotkey         | Description                            |
+| -------------- | -------------------------------------- |
+| `C-q` or `C-c` | Quit the editor                        |
+| `C-s`          | Save the buffer to file                |
+| Return         | Split lines                            |
+| Backspace      | Delete previous character, merge lines |
+| Delete         | Delete current character               |
+| `C-p` or up    | Move cursor to previous row            |
+| `C-n` or down  | Move cursor to next row                |
+| `C-b` or back  | Move cursor to forward                 |
+| `C-f` or right | Move cursor to backward                |
+| Esc            | Ignore                                 |
+| `C-u`          | Undo                                   |
+| Home           | Move cursor to start of line           |
+| End            | Move cursor to end of line             |
 
 # Development
 

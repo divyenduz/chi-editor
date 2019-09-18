@@ -110,7 +110,13 @@ export class Editor {
         this.saveFile(content)
         break
       case '\u001b[3~': // Delete
-        // TODO: Implement delete
+        this.saveSnapshot()
+        if (this.cursor.col < this.buffer.lineLength(this.cursor.row)) {
+          this.buffer = this.buffer.deleteForward(
+            this.cursor.row,
+            this.cursor.col
+          )
+        }
         break
       default:
         // TODO: Function keys pending amongst other keys
