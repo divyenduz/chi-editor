@@ -11,6 +11,8 @@ chi <file-name>
 
 # Features
 
+## Shortcuts
+
 | Hotkey         | Description                            |
 | -------------- | -------------------------------------- |
 | `C-q` or `C-c` | Quit the editor                        |
@@ -26,6 +28,24 @@ chi <file-name>
 | `C-u`          | Undo                                   |
 | Home           | Move cursor to start of line           |
 | End            | Move cursor to end of line             |
+
+## Config
+
+Create `chi.json` in the same folder from where you are running the editor. Global config is not supported yet.
+
+Following structure (all options with defaults):
+
+```json
+{
+  "editorOptions": {
+    "lineNumbers": false
+  }
+}
+```
+
+| Option                    | Description            | Type    |
+| ------------------------- | ---------------------- | ------- |
+| editorOptions.lineNumbers | Show/hide line numbers | Boolean |
 
 # Development
 

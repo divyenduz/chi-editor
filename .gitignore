@@ -1,4 +1,7 @@
 node_modules
 debug.log
 dist/
+
+# Files for development
 dev.file
+chi.json

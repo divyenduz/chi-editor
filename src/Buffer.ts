@@ -2,8 +2,6 @@ import os from 'os'
 
 import { Utils } from './Utils'
 
-const { stdout } = process
-
 export class Buffer {
   private lines: string[]
   constructor(lines: string[]) {
@@ -11,7 +9,7 @@ export class Buffer {
   }
 
   public render() {
-    stdout.write(this.getAsString())
+    return this.getAsString()
   }
 
   public insert(char: string, row: number, col: number): Buffer {

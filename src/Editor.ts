@@ -1,10 +1,13 @@
 import { ANSI } from './ANSI'
 import { Buffer } from './Buffer'
+import { ConfigManager } from './ConfigManager'
 import { Cursor } from './Cursor'
 import { FileManager } from './FileManager'
 import { Utils } from './Utils'
 
-const { stdin } = process
+import os from 'os'
+
+const { stdin, stdout } = process
 
 interface HistoryItem {
   buffer: Buffer
@@ -17,14 +20,18 @@ export class Editor {
   private cursor: Cursor
   private history: HistoryItem[]
 
-  constructor(filename: string) {
+  private configManager: ConfigManager
+
+  constructor(filename: string, configManager: ConfigManager) {
+    this.configManager = configManager
+
     const file = FileManager.readOrCreate(filename)
 
     this.filename = file.filename
-    const lines = file.contents
+    const lines = file.buffer
 
     this.buffer = new Buffer(lines)
-    this.cursor = new Cursor()
+    this.cursor = new Cursor(0, 0)
     this.history = []
   }
 
@@ -42,10 +49,27 @@ export class Editor {
   }
 
   private render() {
+    const lineNumbers = this.configManager.getLineNumbers()
+    const offset = lineNumbers ? 2 : 0
     ANSI.clearScreen()
     ANSI.moveCursor(0, 0)
-    this.buffer.render()
-    ANSI.moveCursor(this.cursor.row, this.cursor.col)
+    const content = this.buffer.render()
+
+    if (lineNumbers) {
+      stdout.write(
+        content
+          .split(os.EOL)
+          .map((line, index) => {
+            const n = `${index + 1}`
+            return lineNumbers ? `${ANSI.purple(n, false)} ${line}` : line
+          })
+          .join(os.EOL),
+      )
+    } else {
+      stdout.write(content)
+    }
+
+    ANSI.moveCursor(this.cursor.row, this.cursor.col + offset)
   }
 
   private handleInput(char: string) {
