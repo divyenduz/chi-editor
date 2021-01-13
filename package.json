@@ -8,10 +8,10 @@
   "license": "MIT",
   "x": "ts-node src/index.ts",
   "devDependencies": {
-    "@types/node": "^12.7.5",
-    "ts-node": "^8.4.1",
-    "tslint": "^5.20.0",
-    "typescript": "^3.6.3"
+    "@types/node": "12.7.5",
+    "ts-node": "8.4.1",
+    "tslint": "5.20.0",
+    "typescript": "3.6.3"
   },
   "scripts": {
     "x": "ts-node src/index.ts dev.file",
