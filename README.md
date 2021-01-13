@@ -54,3 +54,7 @@ Run `yarn xd` to open the sample file. Tail `debug.log` and write to `stderr` fo
 # Contribute
 
 Please feel free to suggest issues and chime in
+
+# Resources
+
+- https://viewsourcecode.org/snaptoken/kilo/05.aTextEditor.html
